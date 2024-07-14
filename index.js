@@ -29,7 +29,14 @@ app.get("/", (req, res) => {
 })
 
 io.on('connection', (socket) => {
-    console.log("A user Connected");
+    socket.on("send-location",(data)=> {
+        io.emit("receive-location", {id: socket.id, ...data})
+    });
+
+    socket.on("disconnect", () => {
+        io.emit("user-disconnected", socket.id)
+     })
+    console.log("A User Connected");
 });
 
 server.listen(4000, () => {
